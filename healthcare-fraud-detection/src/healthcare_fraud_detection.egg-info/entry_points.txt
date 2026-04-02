@@ -1,0 +1,2 @@
+[console_scripts]
+healthcare-fraud-api = healthcare_fraud_detection.api.main:run_server

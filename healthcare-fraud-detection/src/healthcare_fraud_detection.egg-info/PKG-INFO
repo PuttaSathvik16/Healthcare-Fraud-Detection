@@ -1,0 +1,100 @@
+Metadata-Version: 2.4
+Name: healthcare-fraud-detection
+Version: 0.1.0
+Summary: Healthcare fraud detection: ETL, features, models, and API
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: pandas>=2.0
+Requires-Dist: numpy>=1.24
+Requires-Dist: scikit-learn>=1.3
+Requires-Dist: joblib>=1.3
+Requires-Dist: fastapi>=0.109
+Requires-Dist: uvicorn[standard]>=0.27
+Requires-Dist: pydantic>=2.0
+Requires-Dist: pydantic-settings>=2.0
+Requires-Dist: pyarrow>=14.0
+Provides-Extra: dev
+Requires-Dist: pytest>=7.0; extra == "dev"
+Requires-Dist: pytest-cov>=4.0; extra == "dev"
+Requires-Dist: httpx>=0.26; extra == "dev"
+Requires-Dist: ruff>=0.1; extra == "dev"
+Requires-Dist: mypy>=1.0; extra == "dev"
+
+# Healthcare fraud detection
+
+Production-oriented Python package for ingesting claims data, building features, training a fraud model, and serving scores over HTTP.
+
+## Layout
+
+| Path | Purpose |
+|------|---------|
+| `src/healthcare_fraud_detection/` | Installable package (`etl`, `preprocessing`, `features`, `models`, `api`, `utils`) |
+| `data/raw/` | Drop immutable extracts here |
+| `data/processed/` | Cleaned, analysis-ready tables |
+| `notebooks/` | Exploratory work (not imported by the package) |
+| `models/artifacts/` | Trained `joblib` bundles (gitignored except `.gitkeep`) |
+
+## Quick start
+
+```bash
+cd healthcare-fraud-detection
+python -m venv .venv
+source .venv/bin/activate   # Windows: .venv\Scripts\activate
+pip install -e ".[dev]"
+```
+
+### Environment
+
+Optional `.env` (see `utils.config.Settings` — all variables use prefix `HFD_`):
+
+- `HFD_PROJECT_ROOT` — repo root (defaults to current working directory)
+- `HFD_MODEL_REGISTRY_PATH` — path to the trained `model.joblib`
+- `HFD_API_HOST`, `HFD_API_PORT` — API bind address
+- `HFD_LOG_LEVEL` — logging level
+
+### Train (example)
+
+From Python, with a labeled CSV containing an `is_fraud` column (0/1) and feature columns aligned with your schema:
+
+```python
+import pandas as pd
+from healthcare_fraud_detection.models.trainer import train_and_save
+
+df = pd.read_parquet("data/processed/claims_clean.parquet")  # or pd.read_csv(...)
+train_and_save(df)
+```
+
+### Run API
+
+```bash
+healthcare-fraud-api
+# or
+uvicorn healthcare_fraud_detection.api.main:app --host 0.0.0.0 --port 8000
+```
+
+- `GET /health` — liveness and whether a model artifact was loaded
+- `POST /predict` — JSON body `{"claims": [{...}]}`; extend `ClaimRecord` in `api/schemas.py` to match training columns
+
+Until `models/artifacts/model.joblib` exists, `/predict` returns `503`.
+
+### ETL
+
+```python
+from healthcare_fraud_detection.etl import run_etl
+
+run_etl("data/raw/claims.csv")
+```
+
+## Development
+
+```bash
+pip install -e ".[dev]"
+ruff check src
+mypy src
+pytest
+```
+
+## Notes
+
+- Replace placeholder columns (`billed_amount`, `claim_count`, etc.) with your real schema consistently across ETL, features, and API schemas.
+- For regulated environments, add audit logging, authn/z on the API, and separate training/serving configs before production deploy.
