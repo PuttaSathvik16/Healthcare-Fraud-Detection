@@ -89,29 +89,23 @@ Raw Data → ETL Pipeline → Feature Engineering → ML Model → GenAI Explana
 
 **Languages & Libraries**
 - Python (pandas, NumPy, scikit-learn)
-
 **Data Engineering**
 - ETL Pipelines  
 - Data Validation  
 - Feature Engineering  
-
 **Machine Learning**
 - Logistic Regression  
 - Random Forest  
 - Model Evaluation (Precision, Recall, F1, ROC-AUC)
-
 **GenAI**
 - OpenAI API  
 - Prompt Engineering  
 - Explainable AI  
-
 **Backend**
 - FastAPI  
 - REST APIs  
-
 **Frontend**
 - Streamlit  
-
 **Visualization**
 - Power BI (optional dashboards)
 
