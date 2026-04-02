@@ -118,17 +118,6 @@ This claim is flagged as high risk because the billing amount is significantly h
 
 ---
 
-
-### 🖥️ Run Streamlit App
-
-streamlit run src/healthcare_fraud_detection/app_streamlit/app.py
-
-### 🔐 Environment Variables
-
-Create .env file:
-
-OPENAI_API_KEY=your_api_key_here
-
 ### 💼 Business Value
 
 Detects fraudulent healthcare claims early
