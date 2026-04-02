@@ -124,26 +124,6 @@ This claim is flagged as high risk because the billing amount is significantly h
 
 ---
 
-## 🚀 Getting Started
-
-### 1. Clone Repository
-bash
-git clone https://github.com/YOUR_USERNAME/Healthcare-Fraud-Detection.git
-
-cd Healthcare-Fraud-Detection
-**Install Dependencies**
-pip install -r requirements.txt
-**▶️ Run Pipeline
-Generate Data**
-python -m healthcare_fraud_detection.etl.generate_data
-**Run ETL**
-python -m healthcare_fraud_detection.etl.pipeline
-**Train Model**
-python -m healthcare_fraud_detection.models.train
-**🌐 Run API**
-uvicorn healthcare_fraud_detection.api.main:app --reload
-Open:
-http://127.0.0.1:8000/docs
 
 ### 🖥️ Run Streamlit App
 
